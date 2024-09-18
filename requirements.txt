@@ -6,3 +6,4 @@ matplotlib
 logging
 tweepy
 pytrends
+mplfinance
