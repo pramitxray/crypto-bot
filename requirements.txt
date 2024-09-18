@@ -1,0 +1,8 @@
+pandas
+requests
+snscrape
+nltk
+matplotlib
+logging
+tweepy
+pytrends
