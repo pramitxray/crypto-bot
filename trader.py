@@ -114,7 +114,7 @@ def make_trading_decision(crypto_symbol):
     print(f"Overall Score for {crypto_symbol}: {overall_score}")
 
     # Decision based on overall score
-    if overall_score >= 0.6:
+    if overall_score >= 30:
         lg.info(f"BUY signal for {crypto_symbol}.")
         print(f"BUY {crypto_symbol}")
     else:
