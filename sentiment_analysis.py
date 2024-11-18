@@ -28,6 +28,8 @@ def fetch_google_trends_data(crypto_symbol, timeframe='now 7-d'):
         
         if not trends_data.empty:
             trends_data = trends_data.tail(50)  # Get the last 50 data points
+            trends_data.reset_index(inplace=True)  # Reset index to get 'date' column
+            trends_data.rename(columns={'date': 'datetime'}, inplace=True)  # Rename index column to datetime
             lg.info(f"Fetched Google Trends data for {crypto_symbol}.")
             return trends_data
         else:
@@ -42,6 +44,8 @@ def fetch_google_trends_data(crypto_symbol, timeframe='now 7-d'):
         return fetch_google_trends_data(crypto_symbol, timeframe)
     finally:
         time.sleep(0.5)
+
+
 
 
 def analyze_trends_sentiment(trends_data, crypto_symbol):

@@ -7,3 +7,4 @@ logging
 tweepy
 pytrends
 mplfinance
+plotly

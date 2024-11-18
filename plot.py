@@ -1,38 +1,47 @@
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
-# Function to fetch OHLC data from CoinGecko
-def fetch_ohlc_data(crypto_symbol, vs_currency="usd", days=365):
-    url = f"https://api.coingecko.com/api/v3/coins/{crypto_symbol}/ohlc?vs_currency={vs_currency}&days={days}"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        data = response.json()
-        df = pd.DataFrame(data, columns=['timestamp', 'Open', 'High', 'Low', 'Close'])
-        df['Date'] = pd.to_datetime(df['timestamp'], unit='ms')
-        df.set_index('Date', inplace=True)
-        return df
-    else:
-        print(f"Failed to fetch OHLC data: {response.status_code}")
-        return None
+def line_chart(df, ticker):
+    fig = go.Figure()
 
-# Function to plot OHLC data
-def plot_ohlc(crypto_symbol):
-    df = fetch_ohlc_data(crypto_symbol)
+    # Add OHLC data as line plots
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['Open'],
+        mode='lines',
+        name='Open',
+        line=dict(color='blue')
+    ))
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['High'],
+        mode='lines',
+        name='High',
+        line=dict(color='green')
+    ))
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['Low'],
+        mode='lines',
+        name='Low',
+        line=dict(color='red')
+    ))
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['Close'],
+        mode='lines',
+        name='Close',
+        line=dict(color='orange')
+    ))
 
-    if df is not None:
-        plt.figure(figsize=(14, 7))
-        plt.plot(df.index, df['Open'], label='Open', color='blue')
-        plt.plot(df.index, df['High'], label='High', color='green')
-        plt.plot(df.index, df['Low'], label='Low', color='red')
-        plt.plot(df.index, df['Close'], label='Close', color='orange')
-        
-        plt.title(f'OHLC Data for {crypto_symbol.capitalize()} (Last 12 Months)')
-        plt.xlabel('Date')
-        plt.ylabel('Price (in USD)')
-        plt.legend()
-        plt.grid()
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
+    # Customize layout
+    fig.update_layout(
+        title=f"{ticker} OHLC Line Chart",
+        xaxis_title="Date",
+        yaxis_title="Price",
+        xaxis_rangeslider_visible=False,  # Disable range slider
+        template="plotly_dark",  # Optional: Choose a dark theme
+        height=600,  # Adjust chart height
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)  # Position legend
+    )
+
+    return fig
