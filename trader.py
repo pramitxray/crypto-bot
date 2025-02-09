@@ -156,8 +156,10 @@ def make_trading_decision(crypto_symbol):
     ohlc_score = 1 if ohlc_data['Close'].iloc[-1] > ohlc_data['Open'].iloc[-1] else -1
 
     # Display individual scores
-    print(f"Sentiment Score (Google Trends): {sentiment_score}")
     technical_indicators_score = max(technical_indicators_score, 0)
+    sentiment_score = max(sentiment_score, 0)
+    ohlc_score = max(ohlc_score, 0)
+    print(f"Sentiment Score (Google Trends): {sentiment_score}")
     print(f"Technical Indicators Score: {technical_indicators_score}")
     print(f"OHLC Score: {ohlc_score}")
     
@@ -168,14 +170,13 @@ def make_trading_decision(crypto_symbol):
         WEIGHTAGES['technical_indicators'] * technical_indicators_score +
         WEIGHTAGES['trading_volume'] * volume_score +
         WEIGHTAGES['ohlc'] * ohlc_score 
-        # ((WEIGHTAGES['market_cap_dominance'] * market_data['market_cap'] ) /1e9)
     )
 
     # Display overall score
     print(f"Overall Score for {crypto_symbol}: {overall_score}")
 
     # Decision based on overall score
-    if overall_score >= 0.4:
+    if overall_score >= 0.5:
         lg.info(f"BUY signal for {crypto_symbol}.")
         return "BUY"
     else:
